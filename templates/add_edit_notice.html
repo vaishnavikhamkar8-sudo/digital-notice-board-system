@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-start" style="min-height: 80vh;">
+  <div class="col-md-6">
+    <h1 class="mb-4">{% if notice %}Edit{% else %}Add{% endif %} Notice</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input class="form-control" name="title" value="{{ notice['title']|e if notice else '' }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <input class="form-control" name="category" value="{{ notice['category']|e if notice else '' }}">
+      </div>
+      <div class="mb-3">
+  <label class="form-label">Notice Date</label>
+  <input type="date" class="form-control" name="notice_date"
+         value="{{ notice['notice_date'] if notice and notice['notice_date'] else '' }}">
+</div>
+      <div class="mb-3">
+        <label class="form-label">Content</label>
+        <textarea class="form-control" name="content" rows="6" required>{{ notice['content']|e if notice else '' }}</textarea>
+      </div>
+      <button class="btn btn-primary me-2" type="submit">Save</button>
+      <a class="btn btn-secondary" href="{{ url_for('admin') }}">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

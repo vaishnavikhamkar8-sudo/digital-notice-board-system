@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Latest Notices</h1>
+{% if username %}
+  <h2 class="mb-4"> Welcome, {{ username }}!</h2>
+{% endif %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% for n in notices %}
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <h5 class="card-title">{{ n['title'] }}</h5>
+    <p class="card-text text-muted small">
+  {{ n['category'] or 'General' }} — Posted on {{ n['created_at']|datetimeformat }}
+  <br>
+  📅 Event Date: {{ n['notice_date']|datetimeformat if n['notice_date'] else 'Not specified' }}
+</p>
+    <p class="card-text">{{ n['content'][:200] if n['content'] else '' }}{% if n['content']|length > 200 %}...{% endif %}</p>
+    <a href="{{ url_for('notice', id=n['id']) }}" class="btn btn-sm btn-primary float-end">Read more</a>
+  </div>
+</div>
+{% else %}
+<p>No notices yet.</p>
+{% endfor %}
+{% endblock %}
